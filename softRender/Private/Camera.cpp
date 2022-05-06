@@ -43,7 +43,7 @@ Matrix Camera::Perspective(float l, float r, float n, float f, float t, float b)
 	return m;
 }
 
-Matrix Camera::Orthographic(float l, float r, float n, float f, float t, float b)
+Matrix Camera::Orthographic(float l, float r, float n, float f, float t, float b)//正交投影
 {
 	Matrix m;
 	m.value[0][0] = 2 / (r - l);	m.value[0][1] = 0;				m.value[0][2] = 0;				m.value[0][3] = -(r + l) / (r - l);

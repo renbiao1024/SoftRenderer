@@ -39,12 +39,4 @@ public:
 	bool SimpleCVVCullCheck(const Vertex& vertex);	//简单CVV剔除，只考虑三顶点均不在的情况，未做边界三角形重新构建
 	void PrepareRasterization(Vertex& vertex, Buffer* buffer);	//准备光栅化，透视投影除法，视口映射，三角形数据准备
 
-	//以下为测试光栅化函数，单独的画线，画三角形，不带其他顶点数据的绘制
-	void DrawTrangle3D(const Vector3f& v1, const Vector3f& v2, const Vector3f& v3, const Matrix& mvp);
-	void DrawTrangle(int x0, int y0, int x1, int y1, int x2, int y2);
-	void DrawTopFlatTrangle(int x0, int y0, int x1, int y1, int x2, int y2);
-	void DrawBottomFlatTrangle(int x0, int y0, int x1, int y1, int x2, int y2);
-	void DrawLine(int x0, int y0, int x1, int y1);
-	void DrawPixel(int x, int y);
-	Vector3f GetScreenCoord(const Vector3f& v);
 };

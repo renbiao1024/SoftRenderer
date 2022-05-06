@@ -28,19 +28,19 @@ void UpdateInput(Mesh* m)
 
 	if (IS_KEY_DOWN('A'))
 	{
-		moveVector.x -= 0.01f;
+		moveVector.x += 0.01f;
 	}
 	if (IS_KEY_DOWN('D'))
 	{
-		moveVector.x += 0.01f;
+		moveVector.x -= 0.01f;
 	}
 	if (IS_KEY_DOWN('W'))
 	{
-		moveVector.y += 0.01f;
+		moveVector.y -= 0.01f;
 	}
 	if (IS_KEY_DOWN('S'))
 	{
-		moveVector.y -= 0.01f;
+		moveVector.y += 0.01f;
 	}
 	if (IS_KEY_DOWN('E'))
 	{
@@ -78,14 +78,11 @@ void UpdateInput(Mesh* m)
 	Matrix s = m->GetTransform().Scale(Vector3f(1, 1, 1));
 	Matrix r = m->GetTransform().Rotate(rotateVector);//Vector3f(2,0,11)Vector3f(298,32.9,77.59)Vector3f(-141, 83.2993, -14.5)Vector3f(13.5, 2.1, 0)
 	Matrix t = m->GetTransform().Translate(moveVector);//Vector3f(-1,0,0)
-	//×¢Òâ¾ØÕó³Ë·¨Ë³Ðò£¡£¡
-//	moveVector.Print();
+	//×¢Òâ¾ØÕó³Ë·¨Ë³Ðò
 	M = t * r * s;
-	//M.Print();
-//	rotateVector.Print();
+
 	phongShader->v2f.m = M;
 	depthShader->v2f.m = M;
-	//	m->SetObjectToWorld(M);
 }
 void Update(Window* w);
 void DoRender(Window* w);
@@ -132,15 +129,12 @@ int main()
 	planeShader->v2f.p = lightP;
 	planeShader->v2f.lightV = light.LookAt(Vector3f(0, 1, 0));
 	planeShader->v2f.lightP = lightP;
-	//planeShader->frag.depthBuffer = depthBuffer;
-	//device->InitDevice(w->screenHDC, windowWidth, windowHeight);
-	//CreateRenderDevice();
+
 	ReadObjFile("cube.obj", m);
 	CreateCube();
 	CreatePlane();
 
-	//Matrix lightV = light.LookAt(Vector3f(0, 1, 0));
-	//Matrix lightP = camera->Perspective(-1, 1, -100, 0, 1, -1);
+
 	device->directionlights.push_back(light);
 	device->pointlights.push_back(poingt);
 	Update(w);
@@ -177,36 +171,10 @@ void DoRender(Window* w)
 {
 	device->Clear(depthBuffer);
 	device->Clear(zBuffer);
-	//Vector3f v1(0.0f, 1.0f, 0.0f);
-	//Vector3f v2(-1.0f, -1.0f, 0.0f);
-	//Vector3f v3(1.0f, -1.0f, 0.0f);
-	//Matrix mvp = device->GenMVPMatrix();
-	//device->DrawTrangle3D(v1, v2, v3, mvp);
-	//device->DrawMesh(plane);
-	//phongShader->v2f.m->Print();
 	device->DrawMesh(currentMesh, depthShader, depthBuffer);
 	device->DrawMesh(plane, depthShader, depthBuffer);
 	device->DrawMesh(currentMesh, phongShader, zBuffer);
 	device->DrawMesh(plane, planeShader, zBuffer);
-
-	// 	for (int i = 0; i < 500; i++)
-	//  	{
-	//  		for (int j = 0; j < 500; j++)
-	//  		{
-	//  			cout << planeShader->frag.depthBuffer->depthBuffer[i][j] << " ";
-	//  		}
-	//  	}
-	//device->DrawLine(0, 0, 600, 450);
-	//	device->DrawLine(0, 0, 300, 200);
-	// 	for (int i = 0; i < 800; i++)
-	// 	{
-	// 		device->DrawLine(0, 0, 800, i);
-	// 	}
-		//device->DrawTrangle(800, 200, 400, 795, 800, 400);
-	//	device->DrawTrangle(0, 100, 0, 200, 100, 200);
-	//	device->DrawTrangle(0, 100, 100, 100, 100, 200);
-	//	device->DrawTrangle(0, 100, 0, 200, 100, 200);
-		//Ë«»º³å
 	BitBlt(w->hdc, 0, 0, windowWidth, windowHeight, w->screenHDC, 0, 0, SRCCOPY);
 }
 

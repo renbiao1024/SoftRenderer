@@ -9,7 +9,7 @@ void PhongShader::VS(Vertex& v0, Vertex& v1, Vertex& v2)
 	Vertex* v = &v0;
 	for (int i = 0; i < 3; ++i)
 	{
-		switch (i)//对光源做mvp变换
+		switch (i)//对顶点做mvp变换
 		{
 			case 0:
 				v = &v0;
@@ -21,7 +21,6 @@ void PhongShader::VS(Vertex& v0, Vertex& v1, Vertex& v2)
 			case 1:
 				v = &v1;
 				v2f.lp1 = v1.pos;
-				//v2f.lp1.Print();
 				v2f.lp1 = v2f.m.MultiplyVector3(v2f.lp1);
 				v2f.lp1 = v2f.lightV.MultiplyVector3(v2f.lp1);
 				v2f.lp1 = v2f.lightP.MultiplyVector3(v2f.lp1);
@@ -46,15 +45,15 @@ void PhongShader::VS(Vertex& v0, Vertex& v1, Vertex& v2)
 		//diffuse + specular超过1会出现渲染错误
 		float ambient = 0.1;//环境光
 
-		////平行光源
-		//for (auto light : v2f.dirlights)
-		//{
-		////最终颜色 = 直射光颜色 * pow(max(0, dot(反射光方向, 视野方向)), 光泽度(gloss)) + 漫反射颜色(dot(光线，法线)*光强) + 环境光颜色
-		//	Vector3f l = light.GetDirection().Normalize();//光线的反向向量
-		//	diffuse += max(0,l.Dot(v->normal))*light.intensity;
-		//	Vector3f h = ((v2f.cameraPos - v->pos).Normalize() + l).Normalize();//视线和光线的半角向量
-		//	specular += pow(max(0,v->normal.Dot(h)),1)*light.intensity;
-		//}
+		//平行光源
+		for (auto light : v2f.dirlights)
+		{
+		//最终颜色 = 直射光颜色 * pow(max(0, dot(反射光方向, 视野方向)), 光泽度(gloss)) + 漫反射颜色(dot(光线，法线)*光强) + 环境光颜色
+			Vector3f l = light.GetDirection().Normalize();//光线的反向向量
+			diffuse += max(0,l.Dot(v->normal))*light.intensity;
+			Vector3f h = ((v2f.cameraPos - v->pos).Normalize() + l).Normalize();//视线和光线的半角向量
+			specular += pow(max(0,v->normal.Dot(h)),1)*light.intensity;
+		}
 
 		//点光源
 		for (auto light : v2f.pointlights)
@@ -113,8 +112,8 @@ float PhongShader::CalcuteShadow(Vector3f posLightSpace, double bias)
 
 	float shadow = 0.0;
 	//普通阴影
-	//float closestDepth = frag.depthBuffer->Sample(posLightSpace.y, posLightSpace.x);
-	//shadow = depth - bias > closestDepth ? 1 : 0;
+	//float closestdepth = frag.depthbuffer->sample(poslightspace.y, poslightspace.x);
+	//shadow = depth - bias > closestdepth ? 1 : 0;
 
 	//PCF
 	for (int x = -10; x <= 10; ++x)
@@ -125,7 +124,7 @@ float PhongShader::CalcuteShadow(Vector3f posLightSpace, double bias)
 			shadow += depth - bias > pcfDepth ? 1.0 : 0.0;
 		}
 	}
-	shadow /= 441;
+	shadow /= 400;
 	return shadow;
 }
 
